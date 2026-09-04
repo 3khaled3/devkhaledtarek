@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Khaled Tarek — Flutter Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B1220;
+    --surface:#121B2E;
+    --surface-2:#17233A;
+    --border:rgba(255,255,255,0.09);
+    --text:#E7ECF3;
+    --text-muted:#8FA0B8;
+    --mint:#6EE7B7;
+    --mint-dim:#3E9C7B;
+    --coral:#FF8A65;
+    --display:'Space Grotesk', sans-serif;
+    --body:'IBM Plex Sans', sans-serif;
+    --mono:'IBM Plex Mono', monospace;
+    --radius-app:22px;
+    --radius-card:14px;
+    --tabbar-h:64px;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--body);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:calc(var(--tabbar-h) + env(safe-area-inset-bottom));
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+
+  a{color:inherit; text-decoration:none;}
+  :focus-visible{outline:2px solid var(--mint); outline-offset:3px; border-radius:4px;}
+
+  .wrap{max-width:900px; margin:0 auto; padding:0 24px;}
+
+  /* ---------- decorative backdrop ---------- */
+  .backdrop{
+    position:fixed; inset:0; z-index:-1; overflow:hidden;
+  }
+  .backdrop::before{
+    content:"";
+    position:absolute; top:-20%; right:-10%; width:600px; height:600px;
+    background:radial-gradient(circle, rgba(110,231,183,0.10) 0%, transparent 70%);
+  }
+  .backdrop::after{
+    content:"";
+    position:absolute; bottom:-15%; left:-10%; width:500px; height:500px;
+    background:radial-gradient(circle, rgba(255,138,101,0.07) 0%, transparent 70%);
+  }
+  .dot-grid{
+    position:absolute; inset:0;
+    background-image:radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size:28px 28px;
+    mask-image:linear-gradient(to bottom, black, transparent 60%);
+  }
+
+  /* ---------- status bar ---------- */
+  .statusbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:10px 24px;
+    max-width:900px; margin:0 auto;
+    font-family:var(--mono); font-size:12px; color:var(--text-muted);
+    letter-spacing:0.02em;
+  }
+  .statusbar .dev-flag{display:flex; align-items:center; gap:6px;}
+  .statusbar .dot{width:6px; height:6px; border-radius:50%; background:var(--mint); box-shadow:0 0 6px var(--mint);}
+  .statusbar .signal{display:flex; align-items:flex-end; gap:2px;}
+  .statusbar .signal span{width:3px; background:var(--text-muted); display:block;}
+  .statusbar .signal span:nth-child(1){height:4px;}
+  .statusbar .signal span:nth-child(2){height:6px;}
+  .statusbar .signal span:nth-child(3){height:8px;}
+  .statusbar .signal span:nth-child(4){height:10px; background:var(--text);}
+
+  /* ---------- top nav (desktop) ---------- */
+  .topnav{
+    position:sticky; top:0; z-index:40;
+    backdrop-filter:blur(14px);
+    background:rgba(11,18,32,0.75);
+    border-bottom:1px solid var(--border);
+  }
+  .topnav .row{
+    max-width:900px; margin:0 auto; padding:14px 24px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .brand{display:flex; align-items:center; gap:10px; font-family:var(--display); font-weight:600; font-size:16px;}
+  .brand .mark{
+    width:30px; height:30px; border-radius:9px;
+    background:linear-gradient(155deg, var(--mint), var(--mint-dim));
+    display:flex; align-items:center; justify-content:center;
+    color:#0B1220; font-weight:700; font-size:13px; font-family:var(--display);
+  }
+  .topnav nav{display:none; gap:28px; font-size:14px; color:var(--text-muted);}
+  .topnav nav a{transition:color .15s ease;}
+  .topnav nav a:hover, .topnav nav a.active{color:var(--text);}
+  @media (min-width:760px){ .topnav nav{display:flex;} }
+
+  /* ---------- hero ---------- */
+  .hero{padding:56px 0 48px;}
+  .app-icon{
+    width:72px; height:72px; border-radius:var(--radius-app);
+    background:linear-gradient(155deg, var(--mint) 0%, var(--mint-dim) 100%);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--display); font-weight:700; font-size:26px; color:#0B1220;
+    box-shadow:0 12px 30px -10px rgba(110,231,183,0.35);
+    margin-bottom:22px;
+  }
+  .hero h1{
+    font-family:var(--display); font-weight:700;
+    font-size:clamp(34px, 6vw, 52px);
+    line-height:1.05; letter-spacing:-0.01em;
+    margin-bottom:14px; max-width:14ch;
+  }
+  .hero .role{
+    font-family:var(--mono); font-size:14px; color:var(--mint);
+    margin-bottom:16px;
+  }
+  .hero p.lede{
+    font-size:17px; color:var(--text-muted); max-width:52ch; margin-bottom:32px;
+  }
+
+  .stat-row{
+    display:flex; flex-wrap:wrap; gap:0;
+    border:1px solid var(--border); border-radius:var(--radius-card);
+    overflow:hidden; margin-bottom:32px; max-width:560px;
+  }
+  .stat{
+    flex:1 1 33.33%; min-width:130px;
+    padding:16px 18px;
+    border-right:1px solid var(--border);
+    background:var(--surface);
+  }
+  .stat:last-child{border-right:none;}
+  .stat .num{font-family:var(--mono); font-size:20px; font-weight:600; color:var(--text);}
+  .stat .label{font-size:12px; color:var(--text-muted); margin-top:2px;}
+
+  .cta-row{display:flex; flex-wrap:wrap; gap:12px;}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:12px 22px; border-radius:999px;
+    font-size:14px; font-weight:600; font-family:var(--body);
+    transition:transform .15s ease, background .15s ease;
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn-primary{background:var(--mint); color:#0B1220;}
+  .btn-primary:hover{background:#82edc0;}
+  .btn-ghost{border:1px solid var(--border); color:var(--text);}
+  .btn-ghost:hover{background:var(--surface);}
+
+  /* ---------- section shell ---------- */
+  section{padding:64px 0;}
+  section + section{border-top:1px solid var(--border);}
+  .section-head{margin-bottom:32px;}
+  .section-head .kicker{font-family:var(--mono); font-size:12px; color:var(--mint); margin-bottom:8px;}
+  .section-head h2{font-family:var(--display); font-size:clamp(24px,3.4vw,30px); font-weight:600; margin-bottom:8px;}
+  .section-head p{color:var(--text-muted); max-width:56ch; font-size:15px;}
+
+  /* ---------- apps (store listing style) ---------- */
+  .app-list{display:flex; flex-direction:column; gap:14px;}
+  .app-row{
+    display:flex; gap:16px;
+    padding:18px; border:1px solid var(--border); border-radius:var(--radius-card);
+    background:var(--surface);
+  }
+  .app-row .icon{
+    flex:none; width:56px; height:56px; border-radius:16px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--display); font-weight:700; font-size:20px; color:#0B1220;
+  }
+  .app-row .body{flex:1; min-width:0;}
+  .app-row .head{display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:4px;}
+  .app-row h3{font-family:var(--display); font-size:17px; font-weight:600;}
+  .app-row .meta{font-family:var(--mono); font-size:12px; color:var(--mint); white-space:nowrap;}
+  .app-row .desc{color:var(--text-muted); font-size:14px; margin-bottom:12px;}
+  .app-row .links{display:flex; gap:14px; flex-wrap:wrap; font-size:13px;}
+  .app-row .links a{color:var(--text); border-bottom:1px solid var(--border); padding-bottom:2px;}
+  .app-row .links a:hover{border-color:var(--mint); color:var(--mint);}
+
+  /* ---------- work ---------- */
+  .job{
+    border:1px solid var(--border); border-radius:var(--radius-card);
+    background:var(--surface); padding:24px;
+  }
+  .job-head{display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:14px; align-items:flex-start;}
+  .job-head h3{font-family:var(--display); font-size:19px; font-weight:600;}
+  .job-head .company{color:var(--text-muted); font-size:14px; margin-top:2px;}
+  .job-head .dates{font-family:var(--mono); font-size:12px; color:var(--mint); white-space:nowrap; padding-top:3px;}
+  .job ul{list-style:none; display:flex; flex-direction:column; gap:10px;}
+  .job li{position:relative; padding-left:18px; color:var(--text-muted); font-size:14.5px;}
+  .job li::before{content:""; position:absolute; left:0; top:9px; width:6px; height:6px; border-radius:50%; background:var(--mint-dim);}
+
+  .edu{margin-top:20px; display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:8px; padding:16px 24px; border:1px solid var(--border); border-radius:var(--radius-card); background:var(--surface-2);}
+  .edu .degree{font-size:14.5px;}
+  .edu .degree strong{font-family:var(--display); font-weight:600;}
+  .edu .years{font-family:var(--mono); font-size:12px; color:var(--text-muted);}
+
+  /* ---------- projects grid ---------- */
+  .project-grid{display:grid; grid-template-columns:1fr; gap:12px;}
+  @media (min-width:620px){ .project-grid{grid-template-columns:1fr 1fr;} }
+  .proj-card{
+    border:1px solid var(--border); border-radius:var(--radius-card);
+    background:var(--surface); padding:18px;
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .proj-card .top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
+  .proj-card h3{font-family:var(--display); font-size:15.5px; font-weight:600;}
+  .proj-card .go{color:var(--text-muted); flex:none;}
+  .proj-card .go svg{display:block; width:16px; height:16px;}
+  .proj-card:hover .go{color:var(--mint);}
+  .proj-card p{color:var(--text-muted); font-size:13.5px;}
+  .tag-row{display:flex; flex-wrap:wrap; gap:6px;}
+  .tag{font-family:var(--mono); font-size:11px; padding:3px 8px; border-radius:6px; background:var(--surface-2); color:var(--text-muted); border:1px solid var(--border);}
+
+  .more-note{margin-top:18px; font-size:13.5px; color:var(--text-muted);}
+  .more-note a{color:var(--mint); border-bottom:1px solid transparent;}
+  .more-note a:hover{border-color:var(--mint);}
+
+  /* ---------- skills ---------- */
+  .skill-groups{display:grid; grid-template-columns:1fr; gap:20px;}
+  @media (min-width:700px){ .skill-groups{grid-template-columns:1fr 1fr;} }
+  .skill-group h3{font-family:var(--mono); font-size:12px; color:var(--mint); margin-bottom:10px; text-transform:none;}
+  .pill-row{display:flex; flex-wrap:wrap; gap:8px;}
+  .pill{font-size:13px; padding:6px 12px; border-radius:999px; border:1px solid var(--border); color:var(--text); background:var(--surface);}
+
+  /* ---------- contact ---------- */
+  .contact-grid{display:grid; grid-template-columns:1fr; gap:12px;}
+  @media (min-width:620px){ .contact-grid{grid-template-columns:1fr 1fr;} }
+  .contact-card{
+    display:flex; align-items:center; gap:14px;
+    padding:18px; border:1px solid var(--border); border-radius:var(--radius-card);
+    background:var(--surface); transition:border-color .15s ease, background .15s ease;
+  }
+  .contact-card:hover{border-color:var(--mint); background:var(--surface-2);}
+  .contact-card .ic{
+    flex:none; width:40px; height:40px; border-radius:11px; background:var(--surface-2);
+    display:flex; align-items:center; justify-content:center; color:var(--mint);
+  }
+  .contact-card .ic svg{width:19px; height:19px;}
+  .contact-card .label{font-size:12px; color:var(--text-muted); margin-bottom:2px;}
+  .contact-card .value{font-size:14.5px; font-weight:500;}
+
+  footer{padding:32px 0 24px; text-align:center; color:var(--text-muted); font-size:12.5px; font-family:var(--mono);}
+
+  /* ---------- bottom tab bar (mobile) ---------- */
+  .tabbar{
+    position:fixed; left:0; right:0; bottom:0; z-index:50;
+    height:var(--tabbar-h);
+    padding-bottom:env(safe-area-inset-bottom);
+    background:rgba(18,27,46,0.92);
+    backdrop-filter:blur(16px);
+    border-top:1px solid var(--border);
+    display:flex;
+  }
+  @media (min-width:760px){ .tabbar{display:none;} }
+  .tabbar a{
+    flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:4px; color:var(--text-muted); font-size:10.5px; font-family:var(--body);
+    transition:color .15s ease;
+  }
+  .tabbar a svg{width:20px; height:20px;}
+  .tabbar a.active{color:var(--mint);}
+
+  ::selection{background:var(--mint); color:#0B1220;}
+</style>
+</head>
+<body>
+
+<div class="backdrop"><div class="dot-grid"></div></div>
+
+<div class="statusbar">
+  <div class="dev-flag"><span class="dot"></span>Available for work</div>
+  <div class="signal"><span></span><span></span><span></span><span></span></div>
+</div>
+
+<header class="topnav">
+  <div class="row">
+    <div class="brand"><span class="mark">KT</span>Khaled Tarek</div>
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#apps">Apps</a>
+      <a href="#work">Work</a>
+      <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="home" class="hero">
+    <div class="app-icon">KT</div>
+    <div class="role">Flutter Developer</div>
+    <h1>I build mobile apps people actually keep on their phone.</h1>
+    <p class="lede">Two years shipping production Flutter apps for real businesses — chat, payments, bookings, live location — from first commit to the App Store and Google Play.</p>
+
+    <div class="stat-row">
+      <div class="stat"><div class="num">110K+</div><div class="label">App downloads</div></div>
+      <div class="stat"><div class="num">4.8★</div><div class="label">Average rating</div></div>
+      <div class="stat"><div class="num">7</div><div class="label">Independent projects</div></div>
+    </div>
+
+    <div class="cta-row">
+      <a class="btn btn-primary" href="mailto:dev.khaledtarek@gmail.com">Email me</a>
+      <a class="btn btn-ghost" href="#apps">See the apps</a>
+    </div>
+  </section>
+
+  <section id="apps">
+    <div class="section-head">
+      <div class="kicker">Live on the stores</div>
+      <h2>Apps in the wild</h2>
+      <p>Three apps I built and still maintain, used by real people every day.</p>
+    </div>
+    <div class="app-list">
+
+      <div class="app-row">
+        <div class="icon" style="background:linear-gradient(155deg,#8B7CF6,#5B4FC7);">R</div>
+        <div class="body">
+          <div class="head"><h3>Roya</h3><span class="meta">100K+ downloads · 4.8★</span></div>
+          <p class="desc">Dream interpretation platform with real-time chat, appointment scheduling, and live voice/video consultations built on Firebase and ZegoCloud.</p>
+          <div class="links">
+            <a href="https://play.google.com/store/apps/details?id=com.abdulazizahmed.dream" target="_blank" rel="noopener">Google Play</a>
+            <a href="https://apps.apple.com/sa/app/dream-dream-interpretation/id1515745954" target="_blank" rel="noopener">App Store</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="app-row">
+        <div class="icon" style="background:linear-gradient(155deg,#6EE7B7,#2F9E6E);">J</div>
+        <div class="body">
+          <div class="head"><h3>Jeras</h3><span class="meta">10K+ downloads · 4.9★</span></div>
+          <p class="desc">Agriculture and plant care app with adaptive UI across phone, tablet, and web, plus caching and pagination to keep it fast on low-end devices.</p>
+          <div class="links">
+            <a href="https://play.google.com/store/apps/details?id=com.app.jeras" target="_blank" rel="noopener">Google Play</a>
+            <a href="https://apps.apple.com/sa/app/jeras-%D8%BA%D8%B1%D8%A7%D8%B3/id1612021922" target="_blank" rel="noopener">App Store</a>
+            <a href="https://www.jeras.io/" target="_blank" rel="noopener">Website</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="app-row">
+        <div class="icon" style="background:linear-gradient(155deg,#FF8A65,#D9612F);">O</div>
+        <div class="body">
+          <div class="head"><h3>Odhoyati</h3><span class="meta">Google Play</span></div>
+          <p class="desc">Livestock marketplace where users pick a sacrificial animal by type and size, then schedule slaughter, cleaning, and home delivery in one flow.</p>
+          <div class="links">
+            <a href="https://play.google.com/store/apps/details?id=com.odhoyati.odhoyati" target="_blank" rel="noopener">Google Play</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="work">
+    <div class="section-head">
+      <div class="kicker">Experience</div>
+      <h2>Where I've worked</h2>
+    </div>
+
+    <div class="job">
+      <div class="job-head">
+        <div>
+          <h3>Flutter Developer</h3>
+          <div class="company">Focal Point Company — Remote, Saudi Arabia</div>
+        </div>
+        <div class="dates">Nov 2023 – Aug 2025</div>
+      </div>
+      <ul>
+        <li>Built and maintained two production apps, Roya (100K+ downloads, 4.8★) and Jeras (10K+ downloads, 4.9★).</li>
+        <li>Refactored the codebase to MVVM, improving readability and testability, and added clear documentation throughout.</li>
+        <li>Built real-time chat, voice calls, and appointment scheduling on Firebase (Auth, Firestore, Cloud Messaging).</li>
+        <li>Cut production crashes by tracking down state-management and widget-rebuild issues with Sentry.</li>
+        <li>Managed state with BLoC and worked with the backend team to trim redundant network requests.</li>
+        <li>Translated Figma designs into responsive, accessible UI across iOS, Android, and web.</li>
+      </ul>
+    </div>
+
+    <div class="edu">
+      <div class="degree"><strong>B.Sc. Computer Science</strong> — Zagazig University, Faculty of Computer Science</div>
+      <div class="years">2021 – 2025</div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="section-head">
+      <div class="kicker">Side of the desk</div>
+      <h2>Open-source projects</h2>
+      <p>Independent builds covering e-commerce, marketplaces, real-time messaging, and device security.</p>
+    </div>
+
+    <div class="project-grid">
+
+      <a class="proj-card" href="https://github.com/3khaled3/find_my_phone_landing" target="_blank" rel="noopener">
+        <div class="top"><h3>Phone Finder</h3><span class="go">↗</span></div>
+        <p>IMEI registration, lost-device reporting, and real-time alerts, with background location tracking under Android's execution limits.</p>
+        <div class="tag-row"><span class="tag">BLoC/Cubit</span><span class="tag">FCM</span><span class="tag">Hive</span></div>
+      </a>
+
+      <a class="proj-card" href="https://github.com/3khaled3/ecommerce_getx" target="_blank" rel="noopener">
+        <div class="top"><h3>Wasla (E-Commerce)</h3><span class="go">↗</span></div>
+        <p>Full shopping flow with cart, coupons, and order tracking, integrating Stripe, PayPal, and cash on delivery.</p>
+        <div class="tag-row"><span class="tag">GetX</span><span class="tag">Stripe</span><span class="tag">Localization</span></div>
+      </a>
+
+      <a class="proj-card" href="https://github.com/3khaled3/Salon_readme" target="_blank" rel="noopener">
+        <div class="top"><h3>Salon App</h3><span class="go">↗</span></div>
+        <p>Booking platform with real-time chat, offline sync, and location-based salon discovery in Arabic and English.</p>
+        <div class="tag-row"><span class="tag">BLoC</span><span class="tag">Supabase</span><span class="tag">Maps</span></div>
+      </a>
+
+      <a class="proj-card" href="https://github.com/3khaled3/snapDealsApp_readMe" target="_blank" rel="noopener">
+        <div class="top"><h3>Snap Deals</h3><span class="go">↗</span></div>
+        <p>Graduation project: a course marketplace with chat supporting text, image, audio, video, and file messages.</p>
+        <div class="tag-row"><span class="tag">BLoC</span><span class="tag">RTL</span><span class="tag">FCM</span></div>
+      </a>
+
+      <a class="proj-card" href="https://github.com/3khaled3/SocialMediaDownloader" target="_blank" rel="noopener">
+        <div class="top"><h3>Social Media Downloader</h3><span class="go">↗</span></div>
+        <p>Fetches and saves Instagram Reels and posts with a video preview, structured with Clean Architecture.</p>
+        <div class="tag-row"><span class="tag">Clean Arch</span><span class="tag">Dio</span></div>
+      </a>
+
+      <a class="proj-card" href="https://github.com/3khaled3/foryou_ecommerceApp" target="_blank" rel="noopener">
+        <div class="top"><h3>ForYou E-Commerce</h3><span class="go">↗</span></div>
+        <p>Shopping app with paginated, infinite-scrolling catalogs built to keep memory use low at scale.</p>
+        <div class="tag-row"><span class="tag">Provider</span><span class="tag">Pagination</span></div>
+      </a>
+
+      <a class="proj-card" href="https://github.com/3khaled3/Nob_like_Olx" target="_blank" rel="noopener">
+        <div class="top"><h3>Noble (OLX Clone)</h3><span class="go">↗</span></div>
+        <p>Buy-and-sell marketplace with listing CRUD and real-time buyer-seller chat tied to each listing.</p>
+        <div class="tag-row"><span class="tag">Firebase</span><span class="tag">BLoC</span></div>
+      </a>
+
+      <a class="proj-card" href="https://github.com/3khaled3/Jobspot" target="_blank" rel="noopener">
+        <div class="top"><h3>Jobspot</h3><span class="go">↗</span></div>
+        <p>Job search app with live listings, filters, and infinite scrolling.</p>
+        <div class="tag-row"><span class="tag">REST</span><span class="tag">UI</span></div>
+      </a>
+
+    </div>
+
+    <p class="more-note">A few more, including Note App and a WeChat clone, are on <a href="https://github.com/3khaled3" target="_blank" rel="noopener">GitHub</a>.</p>
+  </section>
+
+  <section id="skills">
+    <div class="section-head">
+      <div class="kicker">Toolbox</div>
+      <h2>Skills</h2>
+    </div>
+    <div class="skill-groups">
+      <div class="skill-group">
+        <h3>Mobile development</h3>
+        <div class="pill-row">
+          <span class="pill">Flutter</span><span class="pill">Dart</span><span class="pill">Cross-platform architecture</span><span class="pill">Responsive UI</span><span class="pill">Platform channels</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>State management</h3>
+        <div class="pill-row">
+          <span class="pill">BLoC / Cubit</span><span class="pill">Provider</span><span class="pill">Riverpod</span><span class="pill">GetX</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Backend &amp; APIs</h3>
+        <div class="pill-row">
+          <span class="pill">REST APIs</span><span class="pill">Firebase Auth</span><span class="pill">Firestore</span><span class="pill">Realtime DB</span><span class="pill">Cloud Messaging</span><span class="pill">WebSockets</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Testing &amp; quality</h3>
+        <div class="pill-row">
+          <span class="pill">Unit testing</span><span class="pill">Widget testing</span><span class="pill">Integration testing</span><span class="pill">Debugging</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>Tools &amp; DevOps</h3>
+        <div class="pill-row">
+          <span class="pill">Git</span><span class="pill">GitHub Actions</span><span class="pill">CI/CD</span><span class="pill">Fastlane</span><span class="pill">Shorebird</span><span class="pill">Sentry</span><span class="pill">Jira</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3>UI &amp; product</h3>
+        <div class="pill-row">
+          <span class="pill">Material Design</span><span class="pill">Cupertino</span><span class="pill">Accessibility</span><span class="pill">Animations</span><span class="pill">Localization / RTL</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="section-head">
+      <div class="kicker">Get in touch</div>
+      <h2>Let's build something</h2>
+      <p>Open to freelance work, full-time roles, and anything Flutter.</p>
+    </div>
+    <div class="contact-grid">
+      <a class="contact-card" href="mailto:dev.khaledtarek@gmail.com">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></div>
+        <div><div class="label">Email</div><div class="value">dev.khaledtarek@gmail.com</div></div>
+      </a>
+      <a class="contact-card" href="https://www.linkedin.com/in/khaled-tarek-675632241" target="_blank" rel="noopener">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 11v5M8 8v.01M12 16v-3.5a2 2 0 0 1 4 0V16M12 12.5V16"/></svg></div>
+        <div><div class="label">LinkedIn</div><div class="value">Khaled Tarek</div></div>
+      </a>
+      <a class="contact-card" href="https://github.com/3khaled3" target="_blank" rel="noopener">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.15-1.11-1.46-1.11-1.46-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></svg></div>
+        <div><div class="label">GitHub</div><div class="value">@3khaled3</div></div>
+      </a>
+      <a class="contact-card" href="https://wa.me/201093842831" target="_blank" rel="noopener">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21l1.4-4.2A8 8 0 1 1 8.2 19.6L3 21Z"/><path d="M8.5 9.5c0 3 2.5 5.5 5.5 5.5.6 0 1-.5 1-1v-.7a.6.6 0 0 0-.4-.6l-1.6-.6a.6.6 0 0 0-.7.2l-.3.4a4 4 0 0 1-1.7-1.7l.4-.3a.6.6 0 0 0 .2-.7l-.6-1.6a.6.6 0 0 0-.6-.4H9c-.5 0-1 .4-1 1Z"/></svg></div>
+        <div><div class="label">WhatsApp</div><div class="value">+20 109 384 2831</div></div>
+      </a>
+    </div>
+  </section>
+
+  <footer>Built with Flutter-level attention to detail. © 2026 Khaled Tarek.</footer>
+
+</main>
+
+<nav class="tabbar" id="tabbar">
+  <a href="#home" data-tab="home" class="active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Home
+  </a>
+  <a href="#apps" data-tab="apps">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Apps
+  </a>
+  <a href="#work" data-tab="work">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>Work
+  </a>
+  <a href="#skills" data-tab="skills">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m8 9-4 3 4 3M16 9l4 3-4 3M13 6l-2 12"/></svg>Skills
+  </a>
+  <a href="#contact" data-tab="contact">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Contact
+  </a>
+</nav>
+
+<script>
+  const sections = ['home','apps','work','projects','skills','contact'].map(id => document.getElementById(id));
+  const tabLinks = document.querySelectorAll('.tabbar a');
+  const navLinks = document.querySelectorAll('.topnav nav a');
+
+  const setActive = (id) => {
+    tabLinks.forEach(a => a.classList.toggle('active', a.dataset.tab === id || (a.dataset.tab === 'apps' && id === 'projects')));
+    navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) setActive(entry.target.id);
+    });
+  }, { rootMargin: '-40% 0px -50% 0px', threshold: 0 });
+
+  sections.forEach(s => s && observer.observe(s));
+</script>
+
+</body>
+</html>
