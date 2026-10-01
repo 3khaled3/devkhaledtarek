@@ -9,15 +9,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0B1220;
-    --surface:#121B2E;
-    --surface-2:#17233A;
-    --border:rgba(255,255,255,0.09);
-    --text:#E7ECF3;
-    --text-muted:#8FA0B8;
-    --mint:#6EE7B7;
-    --mint-dim:#3E9C7B;
-    --coral:#FF8A65;
+    --bg:#F7F2EB;
+    --surface:#FFFFFF;
+    --surface-2:#EAE2D6;
+    --border:#EAE2D6;
+    --text:#2F332B;
+    --text-muted:#6F756A;
+    --mint:#8B9A6E;
+    --mint-dim:#71805A;
+    --coral:#D6BFA8;
     --display:'Space Grotesk', sans-serif;
     --body:'IBM Plex Sans', sans-serif;
     --mono:'IBM Plex Mono', monospace;
@@ -54,16 +54,16 @@
   .backdrop::before{
     content:"";
     position:absolute; top:-20%; right:-10%; width:600px; height:600px;
-    background:radial-gradient(circle, rgba(110,231,183,0.10) 0%, transparent 70%);
+    background:radial-gradient(circle, rgba(139,154,110,0.12) 0%, transparent 70%);
   }
   .backdrop::after{
     content:"";
     position:absolute; bottom:-15%; left:-10%; width:500px; height:500px;
-    background:radial-gradient(circle, rgba(255,138,101,0.07) 0%, transparent 70%);
+    background:radial-gradient(circle, rgba(214,191,168,0.10) 0%, transparent 70%);
   }
   .dot-grid{
     position:absolute; inset:0;
-    background-image:radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-image:radial-gradient(rgba(47,51,43,0.06) 1px, transparent 1px);
     background-size:28px 28px;
     mask-image:linear-gradient(to bottom, black, transparent 60%);
   }
@@ -89,7 +89,7 @@
   .topnav{
     position:sticky; top:0; z-index:40;
     backdrop-filter:blur(14px);
-    background:rgba(11,18,32,0.75);
+    background:rgba(247,242,235,0.88);
     border-bottom:1px solid var(--border);
   }
   .topnav .row{
@@ -101,7 +101,7 @@
     width:30px; height:30px; border-radius:9px;
     background:linear-gradient(155deg, var(--mint), var(--mint-dim));
     display:flex; align-items:center; justify-content:center;
-    color:#0B1220; font-weight:700; font-size:13px; font-family:var(--display);
+    color:#F7F2EB; font-weight:700; font-size:13px; font-family:var(--display);
   }
   .topnav nav{display:none; gap:28px; font-size:14px; color:var(--text-muted);}
   .topnav nav a{transition:color .15s ease;}
@@ -114,7 +114,7 @@
     width:72px; height:72px; border-radius:var(--radius-app);
     background:linear-gradient(155deg, var(--mint) 0%, var(--mint-dim) 100%);
     display:flex; align-items:center; justify-content:center;
-    font-family:var(--display); font-weight:700; font-size:26px; color:#0B1220;
+    font-family:var(--display); font-weight:700; font-size:26px; color:#F7F2EB;
     box-shadow:0 12px 30px -10px rgba(110,231,183,0.35);
     margin-bottom:22px;
   }
@@ -155,8 +155,8 @@
     transition:transform .15s ease, background .15s ease;
   }
   .btn:hover{transform:translateY(-1px);}
-  .btn-primary{background:var(--mint); color:#0B1220;}
-  .btn-primary:hover{background:#82edc0;}
+  .btn-primary{background:var(--mint); color:#F7F2EB;}
+  .btn-primary:hover{background:#9CAA83;}
   .btn-ghost{border:1px solid var(--border); color:var(--text);}
   .btn-ghost:hover{background:var(--surface);}
 
@@ -178,7 +178,7 @@
   .app-row .icon{
     flex:none; width:56px; height:56px; border-radius:16px;
     display:flex; align-items:center; justify-content:center;
-    font-family:var(--display); font-weight:700; font-size:20px; color:#0B1220;
+    font-family:var(--display); font-weight:700; font-size:20px; color:#F7F2EB;
   }
   .app-row .body{flex:1; min-width:0;}
   .app-row .head{display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:4px;}
@@ -259,7 +259,7 @@
     position:fixed; left:0; right:0; bottom:0; z-index:50;
     height:var(--tabbar-h);
     padding-bottom:env(safe-area-inset-bottom);
-    background:rgba(18,27,46,0.92);
+    background:rgba(247,242,235,0.94);
     backdrop-filter:blur(16px);
     border-top:1px solid var(--border);
     display:flex;
@@ -273,7 +273,7 @@
   .tabbar a svg{width:20px; height:20px;}
   .tabbar a.active{color:var(--mint);}
 
-  ::selection{background:var(--mint); color:#0B1220;}
+  ::selection{background:var(--mint); color:#F7F2EB;}
 </style>
 </head>
 <body>
@@ -328,7 +328,7 @@
     <div class="app-list">
 
       <div class="app-row">
-        <div class="icon" style="background:linear-gradient(155deg,#8B7CF6,#5B4FC7);">R</div>
+        <div class="icon" style="background:linear-gradient(155deg,#8B9A6E,#71805A);">R</div>
         <div class="body">
           <div class="head"><h3>Roya</h3><span class="meta">100K+ downloads · 4.8★</span></div>
           <p class="desc">Dream interpretation platform with real-time chat, appointment scheduling, and live voice/video consultations built on Firebase and ZegoCloud.</p>
@@ -340,7 +340,7 @@
       </div>
 
       <div class="app-row">
-        <div class="icon" style="background:linear-gradient(155deg,#6EE7B7,#2F9E6E);">J</div>
+        <div class="icon" style="background:linear-gradient(155deg,#A8B58F,#8B9A6E);">J</div>
         <div class="body">
           <div class="head"><h3>Jeras</h3><span class="meta">10K+ downloads · 4.9★</span></div>
           <p class="desc">Agriculture and plant care app with adaptive UI across phone, tablet, and web, plus caching and pagination to keep it fast on low-end devices.</p>
@@ -353,7 +353,7 @@
       </div>
 
       <div class="app-row">
-        <div class="icon" style="background:linear-gradient(155deg,#FF8A65,#D9612F);">O</div>
+        <div class="icon" style="background:linear-gradient(155deg,#D6BFA8,#B99A7E);">O</div>
         <div class="body">
           <div class="head"><h3>Odhoyati</h3><span class="meta">Google Play</span></div>
           <p class="desc">Livestock marketplace where users pick a sacrificial animal by type and size, then schedule slaughter, cleaning, and home delivery in one flow.</p>
